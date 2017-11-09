@@ -12,24 +12,44 @@ public class CenterCube : MonoBehaviour {
 
     float cardheight = 0.02f;
 
-    List<GameObject> _cardDesk = new List<GameObject>();
+    List<GameObject> _cardDeck = new List<GameObject>();
     public List<Transform> _userPos = new List<Transform>();
 
+    public ProcScript _procScript = null;
 
+    int currCardIdx = 0;
+    int currPosIdx = 0;
+    
     public void MakeDeck()
     {
         for (int i = 0; i < 48; i++)
         {
             GameObject card = Instantiate(cardBase, new Vector3(transform.position.x, transform.position.y + cardheight * i, transform.position.z), Quaternion.identity) as GameObject;
             card.transform.parent = this.transform;
-            _cardDesk.Add(card);
+            card.GetComponent<CardBase>().onCardArrived = OnCardArrived;
+            _cardDeck.Add(card);
         }
     }
 
+
+    bool arrived = false;
     public void MoveToUser()
     {
-        _cardDesk[0].GetComponent<CardBase>().StartMove(_userPos[0]);
-        _cardDesk[1].GetComponent<CardBase>().StartMove(_userPos[1]);
+        if (currCardIdx > 2)
+            return;
+        
+        arrived = false;
+        _cardDeck[currCardIdx].GetComponent<CardBase>().StartMove(_userPos[currPosIdx]);
+        currCardIdx++;
+        currPosIdx++;
+    }
+
+    void OnCardArrived()
+    {
+        arrived = true;
+        Debug.Log("왔네~");
+
+        MoveToUser();
     }
 }
 

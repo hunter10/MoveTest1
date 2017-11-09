@@ -5,7 +5,10 @@ using DG.Tweening;
 public class CardBase : MonoBehaviour {
 
     public Vector3 originalPos;
-    
+
+    public delegate void CardArrived(); //
+    public CardArrived onCardArrived;
+
     void Start()
     {
         originalPos = transform.position;
@@ -15,13 +18,13 @@ public class CardBase : MonoBehaviour {
     {
         Tween myTween = transform.DOMove(dest.position, 0.5f);
         myTween.SetEase(Ease.InOutQuint);
-        //myTween.OnComplete(myFunction);
+        myTween.OnComplete(myFunction);
     }
-
+        
     void myFunction()
     {
-        Debug.Log("Complete");
-        StartCoroutine("moveOriginalPos");
+        if(onCardArrived != null)
+            onCardArrived();
     }
 
     IEnumerator moveOriginalPos()
