@@ -38,5 +38,38 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds((float)time);
         _procScript.DoneProc();
     }
+
+    void Update()
+    {
+        return;
+
+        if(Input.GetMouseButton(0))
+        {
+            Debug.Log("Left mouse button up");
+            StartCoroutine(waitForMouseDown());
+        }  
+    }
+
+    public IEnumerator waitForMouseDown()
+    {
+        yield return new WaitForMouseDown();
+        Debug.Log("Right mouse button pressed");
+    }
+}
+
+public class WaitForMouseDown : CustomYieldInstruction
+{
+    public override bool keepWaiting
+    {
+        get
+        {
+            return !Input.GetMouseButtonDown(1);
+        }
+    }
+
+    public WaitForMouseDown()
+    {
+        Debug.Log("Wait for Mouse right button down");
+    }
 }
 
