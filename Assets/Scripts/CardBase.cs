@@ -23,8 +23,11 @@ public class CardBase : MonoBehaviour {
         
     void myFunction()
     {
-        if(onCardArrived != null)
+        if (onCardArrived != null)
+        {
             onCardArrived();
+            onCardArrived = null;
+        }
     }
 
     IEnumerator moveOriginalPos()

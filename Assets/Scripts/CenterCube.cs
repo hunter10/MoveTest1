@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CenterCube : MonoBehaviour {
+public class CenterCube : MonoBehaviour
+{
 
     // 게임스타트 버튼 이벤트 받으면
     // 48장 카드 랜덤하게 섞어서 가운데에 쌓기
@@ -19,7 +20,7 @@ public class CenterCube : MonoBehaviour {
 
     int currCardIdx = 0;
     int currPosIdx = 0;
-    
+
     public void MakeDeck()
     {
         for (int i = 0; i < 48; i++)
@@ -31,14 +32,13 @@ public class CenterCube : MonoBehaviour {
         }
     }
 
-
-    bool arrived = false;
+    /*
+     * 일반버전    
     public void MoveToUser()
     {
         if (currCardIdx > 2)
             return;
-        
-        arrived = false;
+    
         _cardDeck[currCardIdx].GetComponent<CardBase>().StartMove(_userPos[currPosIdx]);
         currCardIdx++;
         currPosIdx++;
@@ -46,10 +46,36 @@ public class CenterCube : MonoBehaviour {
 
     void OnCardArrived()
     {
-        arrived = true;
         Debug.Log("왔네~");
-
         MoveToUser();
     }
-}
+    *
+    */
 
+    bool arrived = false;
+    public void MoveToUser()
+    {
+        _procScript.AddProc("ProcMoveToUser");
+        _procScript.AddProc("ProcMoveToUser");
+    }
+
+    IEnumerator ProcMoveToUser()
+    {
+        _cardDeck[currCardIdx].GetComponent<CardBase>().StartMove(_userPos[currPosIdx]);
+        currCardIdx++;
+        currPosIdx++;
+
+        while(!arrived)
+        {
+            yield return null;
+        }
+
+        Debug.Log("작업완료");
+    }
+
+    void OnCardArrived()
+    {
+        arrived = true;
+        _procScript.DoneProc();
+    }
+}
